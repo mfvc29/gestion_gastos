@@ -40,6 +40,31 @@
     </div>
   </div>
 
+  <!-- Tareas Pendientes / Escáner -->
+  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+    <h3 style="font-size: 1.125rem; margin: 0;">Mis Cuentas</h3>
+    <button class="btn btn-icon" (click)="scanEmails()" [disabled]="isScanning()" style="width: auto; height: auto; padding: 0.5rem 1rem; border-radius: 2rem; background: var(--secondary); color: white; display: flex; gap: 0.5rem;">
+      <span class="material-symbols-outlined" [style.animation]="isScanning() ? 'spin 1s linear infinite' : ''">mail</span>
+      <span style="font-size: 0.9rem; font-weight: 500;">{{ isScanning() ? 'Buscando...' : 'Escanear Gastos' }}</span>
+    </button>
+  </div>
+
+  <div *ngIf="scannedExpenses().length > 0" class="glass-card mb-4" style="border: 2px solid var(--secondary); background: rgba(245, 158, 11, 0.05);">
+    <h3 style="font-size: 1rem; font-weight: 600; color: var(--secondary); margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem;">
+      <span class="material-symbols-outlined">auto_awesome</span>
+      Encontrados en Gmail
+    </h3>
+    <div style="display: flex; flex-direction: column; gap: 0.5rem;">
+      <div *ngFor="let exp of scannedExpenses()" style="display: flex; justify-content: space-between; align-items: center; background: white; padding: 0.75rem; border-radius: 0.5rem; box-shadow: 0 1px 2px rgba(0,0,0,0.05);">
+        <div style="display: flex; flex-direction: column;">
+          <span style="font-weight: 600; font-size: 0.95rem;">S/ {{ exp.amount | number:'1.2-2' }}</span>
+          <span style="font-size: 0.8rem; color: var(--text-muted);">{{ exp.description }}</span>
+        </div>
+        <button class="btn" (click)="addScannedExpense(exp)" style="background: var(--primary); color: white; padding: 0.25rem 0.75rem; border-radius: 0.5rem; font-size: 0.85rem;">Agregar</button>
+      </div>
+    </div>
+  </div>
+
   <!-- Account Quick View -->
   <div style="display: flex; gap: 0.5rem; overflow-x: auto; padding-bottom: 1rem; margin-bottom: 1rem;">
     <div *ngFor="let acc of txService.accounts()" class="glass-card" style="min-width: 140px; padding: 0.75rem;">
