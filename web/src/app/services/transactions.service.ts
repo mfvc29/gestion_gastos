@@ -68,15 +68,17 @@ export class TransactionsService {
 
   // Add Account
   async addAccount(name: string, bank: string, type: AccountType, balance: number, creditLimit?: number) {
-    const newAccount: Account = {
+    const newAccount: any = {
       id: crypto.randomUUID(),
       name,
       bank,
       type,
       balance,
-      creditLimit
     };
-    await this.firestore.saveAccount(newAccount);
+    if (creditLimit !== undefined && creditLimit !== null) {
+      newAccount.creditLimit = creditLimit;
+    }
+    await this.firestore.saveAccount(newAccount as Account);
   }
 
   async updateAccountBalance(accountId: string, newBalance: number) {
@@ -109,7 +111,7 @@ export class TransactionsService {
       if (id) eventId = id;
     }
 
-    const newTx: Transaction = {
+    const newTx: any = {
       id: crypto.randomUUID(),
       title,
       amount,
@@ -117,12 +119,17 @@ export class TransactionsService {
       type,
       isCredit,
       category,
-      accountId,
-      notes,
-      calendarEventId: eventId
+      accountId
     };
+    
+    if (notes !== undefined && notes !== null && notes !== '') {
+      newTx.notes = notes;
+    }
+    if (eventId !== undefined && eventId !== null) {
+      newTx.calendarEventId = eventId;
+    }
 
-    await this.firestore.saveTransaction(newTx);
+    await this.firestore.saveTransaction(newTx as Transaction);
 
     // Update account balances
     const account = this.accounts().find(a => a.id === accountId);
