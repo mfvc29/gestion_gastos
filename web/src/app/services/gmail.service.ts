@@ -22,8 +22,8 @@ export class GmailService {
       return [];
     }
 
-    // Query for last 1 day from Interbank or BCP
-    const query = encodeURIComponent('(from:servicioalcliente@netinterbank.com.pe OR from:notificaciones@notificacionesbcp.com.pe) newer_than:1d');
+    // Query for last 2 days from Interbank or BCP
+    const query = encodeURIComponent('(from:servicioalcliente@netinterbank.com.pe OR from:notificaciones@notificacionesbcp.com.pe) newer_than:2d');
     const url = `https://gmail.googleapis.com/gmail/v1/users/me/messages?q=${query}`;
 
     try {
@@ -95,9 +95,17 @@ export class GmailService {
       const isBCP = fromHeader.includes('notificaciones@notificacionesbcp.com.pe');
 
       if (isInterbank) {
-        const amountMatch = decodedBody.match(/Monto y moneda[\s\S]{1,50}?S\/\s*([\d.,]+)/i) || snippet.match(/S\/\s*([\d.,]+)/i);
-        const destMatch = decodedBody.match(/Destinatario[\s\S]{1,10}?\n\n?([^\n]+)/i) || decodedBody.match(/Destinatario\s+([A-Za-z0-9 ]+)/i);
+        console.log("Interbank Snippet:", snippet);
+        // Strip HTML tags for easier regex matching
+        const cleanBody = decodedBody.replace(/<[^>]*>?/gm, ' ').replace(/\s+/g, ' ');
+        console.log("Interbank Clean Body:", cleanBody);
         
+        const amountMatch = cleanBody.match(/Monto y moneda\s*S\/\s*([\d.,]+)/i) || snippet.match(/S\/\s*([\d.,]+)/i);
+        const destMatch = cleanBody.match(/Destinatario\s+([A-Za-z0-9 ]+)/i);
+        
+        console.log("Amount Match:", amountMatch);
+        console.log("Dest Match:", destMatch);
+
         if (amountMatch) {
           const amount = parseFloat(amountMatch[1].replace(',', ''));
           const description = destMatch ? destMatch[1].trim() : 'Transferencia Interbank';
@@ -110,9 +118,17 @@ export class GmailService {
           };
         }
       } else if (isBCP) {
-        const amountMatch = decodedBody.match(/Monto pagado[\s\S]{1,50}?S\/\s*([\d.,]+)/i) || snippet.match(/S\/\s*([\d.,]+)/i);
-        const destMatch = decodedBody.match(/Pagado a[\s\S]{1,10}?\n\n?([^\n]+)/i) || decodedBody.match(/Operación realizada[\s\S]{1,10}?\n\n?([^\n]+)/i) || decodedBody.match(/Pagado a\s+([A-Za-z0-9 ]+)/i);
+        console.log("BCP Snippet:", snippet);
+        // Strip HTML tags for easier regex matching
+        const cleanBody = decodedBody.replace(/<[^>]*>?/gm, ' ').replace(/\s+/g, ' ');
+        console.log("BCP Clean Body:", cleanBody);
         
+        const amountMatch = cleanBody.match(/Monto pagado\s*S\/\s*([\d.,]+)/i) || snippet.match(/S\/\s*([\d.,]+)/i);
+        const destMatch = cleanBody.match(/Pagado a\s+([A-Za-z0-9 ]+)/i) || cleanBody.match(/Operación realizada\s+([A-Za-z0-9 ]+)/i);
+        
+        console.log("BCP Amount Match:", amountMatch);
+        console.log("BCP Dest Match:", destMatch);
+
         if (amountMatch) {
           const amount = parseFloat(amountMatch[1].replace(',', ''));
           const description = destMatch ? destMatch[1].trim() : 'Pago BCP';

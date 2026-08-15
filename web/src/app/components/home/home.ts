@@ -26,8 +26,19 @@ export class Home {
 
   async scanEmails() {
     this.isScanning.set(true);
-    const results = await this.gmail.scanRecentExpenses();
-    this.scannedExpenses.set(results);
+    try {
+      const results = await this.gmail.scanRecentExpenses();
+      if (results.length === 0) {
+        if (!this.auth.googleAccessToken()) {
+          alert('Debes cerrar sesión y volver a iniciarla para autorizar la lectura de correos.');
+        } else {
+          alert('No se encontraron gastos nuevos (de BCP o Interbank) en las últimas 24 horas, o el formato cambió.');
+        }
+      }
+      this.scannedExpenses.set(results);
+    } catch (e) {
+      alert('Hubo un error al escanear los correos.');
+    }
     this.isScanning.set(false);
   }
 
