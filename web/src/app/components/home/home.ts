@@ -1,10 +1,11 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
+import { RouterModule, Router } from '@angular/router';
 import { TransactionsService } from '../../services/transactions.service';
 import { AuthService } from '../../services/auth.service';
 import { TransactionType } from '../../models/transaction.model';
 import { AccountType } from '../../models/account.model';
+import { GmailService, ScannedExpense } from '../../services/gmail.service';
 
 @Component({
   selector: 'app-home',
@@ -15,8 +16,32 @@ import { AccountType } from '../../models/account.model';
 export class Home {
   public txService = inject(TransactionsService);
   public auth = inject(AuthService);
+  public gmail = inject(GmailService);
+  private router = inject(Router);
   TransactionType = TransactionType;
   AccountType = AccountType;
+
+  public scannedExpenses = signal<ScannedExpense[]>([]);
+  public isScanning = signal(false);
+
+  async scanEmails() {
+    this.isScanning.set(true);
+    const results = await this.gmail.scanRecentExpenses();
+    this.scannedExpenses.set(results);
+    this.isScanning.set(false);
+  }
+
+  addScannedExpense(expense: ScannedExpense) {
+    this.router.navigate(['/add'], { 
+      queryParams: { 
+        amount: expense.amount, 
+        desc: expense.description, 
+        type: TransactionType.expense 
+      } 
+    });
+    // Remove it from the list visually
+    this.scannedExpenses.update(list => list.filter(e => e.id !== expense.id));
+  }
 
   getFirstName(): string {
     const user = this.auth.user();

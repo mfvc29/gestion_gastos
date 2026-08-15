@@ -22,6 +22,7 @@ export class AuthService {
   async loginWithGoogle() {
     const provider = new GoogleAuthProvider();
     provider.addScope('https://www.googleapis.com/auth/calendar.events');
+    provider.addScope('https://www.googleapis.com/auth/gmail.readonly');
     
     try {
       const result = await signInWithPopup(auth, provider);

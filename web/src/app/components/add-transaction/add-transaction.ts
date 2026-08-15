@@ -1,7 +1,7 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Router, RouterModule } from '@angular/router';
+import { Router, RouterModule, ActivatedRoute } from '@angular/router';
 import { TransactionsService } from '../../services/transactions.service';
 import { TransactionType } from '../../models/transaction.model';
 import { Account, AccountType } from '../../models/account.model';
@@ -15,6 +15,7 @@ import { Account, AccountType } from '../../models/account.model';
 export class AddTransaction implements OnInit {
   public txService = inject(TransactionsService);
   private router = inject(Router);
+  private route = inject(ActivatedRoute);
 
   title = '';
   amount: number | null = null;
@@ -33,6 +34,12 @@ export class AddTransaction implements OnInit {
   ];
 
   ngOnInit() {
+    this.route.queryParams.subscribe(params => {
+      if (params['amount']) this.amount = parseFloat(params['amount']);
+      if (params['desc']) this.title = params['desc'];
+      if (params['type']) this.type = params['type'] as TransactionType;
+    });
+
     if (this.txService.accounts().length > 0) {
       this.accountId = this.txService.accounts()[0].id;
     }
