@@ -2,7 +2,7 @@
   <div class="topbar">
     <a routerLink="/" class="btn btn-icon"><span class="material-symbols-outlined">arrow_back</span></a>
     <h1 class="topbar-title" style="font-size: 1.5rem;">Cuentas y Perfil</h1>
-    <div style="width: 48px;">
+    <div style="width: 3rem;">
       <button (click)="logout()" class="btn btn-icon" style="color: var(--danger);"><span class="material-symbols-outlined">logout</span></button>
     </div>
   </div>
@@ -30,7 +30,7 @@
             Límite: S/ {{ acc.creditLimit | number:'1.2-2' }}
           </div>
         </div>
-        <button (click)="deleteAccount(acc.id)" class="btn-icon" style="width: 32px; height: 32px; color: var(--danger);"><span class="material-symbols-outlined" style="font-size: 1.2rem;">delete</span></button>
+        <button (click)="deleteAccount(acc.id)" class="btn-icon" style="width: 2rem; height: 2rem; flex-shrink: 0; color: var(--danger);"><span class="material-symbols-outlined" style="font-size: 1.2rem;">delete</span></button>
       </div>
     </div>
   </div>

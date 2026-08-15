@@ -102,7 +102,7 @@
           <span class="tx-amount" [class.negative]="tx.type === TransactionType.expense || tx.type === TransactionType.payment" [class.positive]="tx.type === TransactionType.income" [style.color]="tx.type === TransactionType.reminder ? 'var(--text-main)' : ''">
             {{ tx.type === TransactionType.income ? '+' : (tx.type === TransactionType.reminder ? '' : '-') }} S/ {{ tx.amount | number:'1.2-2' }}
           </span>
-          <button (click)="deleteTx(tx.id)" class="btn-icon" style="color: var(--danger); width: 24px; height: 24px;">
+          <button (click)="deleteTx(tx.id)" class="btn-icon" style="color: var(--danger); width: 1.5rem; height: 1.5rem; flex-shrink: 0;">
             <span class="material-symbols-outlined" style="font-size: 1rem;">close</span>
           </button>
         </div>
