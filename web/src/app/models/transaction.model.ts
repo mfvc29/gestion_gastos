@@ -2,6 +2,7 @@ export enum TransactionType {
   expense = 'expense',
   income = 'income',
   payment = 'payment',
+  reminder = 'reminder',
 }
 
 export interface Transaction {

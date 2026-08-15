@@ -81,9 +81,9 @@
       <div class="tx-item" *ngFor="let tx of txService.transactions()">
         <div style="display: flex; align-items: center; gap: 1rem;">
           <div class="tx-icon"
-            [style.background]="tx.type === TransactionType.income ? 'rgba(16, 185, 129, 0.1)' : (tx.type === TransactionType.payment ? 'rgba(79, 70, 229, 0.1)' : 'rgba(239, 68, 68, 0.1)')"
-            [style.color]="tx.type === TransactionType.income ? 'var(--success)' : (tx.type === TransactionType.payment ? 'var(--primary)' : 'var(--danger)')">
-            <span class="material-symbols-outlined">{{ tx.type === TransactionType.income ? 'arrow_downward' : (tx.type === TransactionType.payment ? 'credit_score' : 'arrow_upward') }}</span>
+            [style.background]="tx.type === TransactionType.income ? 'rgba(16, 185, 129, 0.1)' : (tx.type === TransactionType.payment ? 'rgba(79, 70, 229, 0.1)' : (tx.type === TransactionType.reminder ? 'rgba(245, 158, 11, 0.1)' : 'rgba(239, 68, 68, 0.1)'))"
+            [style.color]="tx.type === TransactionType.income ? 'var(--success)' : (tx.type === TransactionType.payment ? 'var(--primary)' : (tx.type === TransactionType.reminder ? 'var(--secondary)' : 'var(--danger)'))">
+            <span class="material-symbols-outlined">{{ tx.type === TransactionType.income ? 'arrow_downward' : (tx.type === TransactionType.payment ? 'credit_score' : (tx.type === TransactionType.reminder ? 'notifications' : 'arrow_upward')) }}</span>
           </div>
           <div>
             <h4 class="tx-title">{{ tx.title }}</h4>
@@ -99,8 +99,8 @@
           </div>
         </div>
         <div style="display: flex; align-items: center; gap: 1rem;">
-          <span class="tx-amount" [class.negative]="tx.type === TransactionType.expense || tx.type === TransactionType.payment" [class.positive]="tx.type === TransactionType.income">
-            {{ tx.type === TransactionType.income ? '+' : '-' }} S/ {{ tx.amount | number:'1.2-2' }}
+          <span class="tx-amount" [class.negative]="tx.type === TransactionType.expense || tx.type === TransactionType.payment" [class.positive]="tx.type === TransactionType.income" [style.color]="tx.type === TransactionType.reminder ? 'var(--text-main)' : ''">
+            {{ tx.type === TransactionType.income ? '+' : (tx.type === TransactionType.reminder ? '' : '-') }} S/ {{ tx.amount | number:'1.2-2' }}
           </span>
           <button (click)="deleteTx(tx.id)" class="btn-icon" style="color: var(--danger); width: 24px; height: 24px;">
             <span class="material-symbols-outlined" style="font-size: 1rem;">close</span>

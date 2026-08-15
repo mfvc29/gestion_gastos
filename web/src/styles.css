@@ -58,10 +58,10 @@ h1, h2, h3, h4, h5, h6 {
   color: var(--text-main);
 }
 
-/* App Container - Mobile Optimized View */
+/* App Container - Fully Fluid Autosize View */
 .app-container {
   width: 100%;
-  max-width: 480px; /* Mobile App Width Constraint */
+  max-width: 100%; /* Autosize on any screen */
   min-height: 100vh;
   background-color: #fafafa;
   box-shadow: 0 0 20px rgba(0,0,0,0.05);

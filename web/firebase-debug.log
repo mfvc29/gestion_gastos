@@ -1,0 +1,61 @@
+[debug] [2026-08-15T18:40:53.097Z] ----------------------------------------------------------------------
+[debug] [2026-08-15T18:40:53.099Z] Command:       /usr/bin/node /home/mvargasch/.npm/_npx/ba4f1959e38407b5/node_modules/.bin/firebase deploy --only hosting --project gestion-gastos-8f1b2
+[debug] [2026-08-15T18:40:53.100Z] CLI Version:   15.27.0
+[debug] [2026-08-15T18:40:53.100Z] Platform:      linux
+[debug] [2026-08-15T18:40:53.100Z] Node Version:  v26.7.0
+[debug] [2026-08-15T18:40:53.100Z] Detected Agent: antigravity
+[debug] [2026-08-15T18:40:53.100Z] Time:          Sat Aug 15 2026 13:40:53 GMT-0500 (hora estándar de Perú)
+[debug] [2026-08-15T18:40:53.101Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2026-08-15T18:40:54.096Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2026-08-15T18:40:54.096Z] > authorizing via signed-in user (29.mfvc@gmail.com)
+[debug] [2026-08-15T18:40:54.097Z] [iam] checking project gestion-gastos-8f1b2 for permissions ["firebase.projects.get","firebasehosting.sites.update"]
+[debug] [2026-08-15T18:40:54.115Z] Checked if tokens are valid: true, expires at: 1786821488371
+[debug] [2026-08-15T18:40:54.115Z] Checked if tokens are valid: true, expires at: 1786821488371
+[debug] [2026-08-15T18:40:54.116Z] >>> [apiv2][query] POST https://cloudresourcemanager.googleapis.com/v1/projects/gestion-gastos-8f1b2:testIamPermissions [none]
+[debug] [2026-08-15T18:40:54.117Z] >>> [apiv2][(partial)header] POST https://cloudresourcemanager.googleapis.com/v1/projects/gestion-gastos-8f1b2:testIamPermissions  x-goog-user-project=gestion-gastos-8f1b2
+[debug] [2026-08-15T18:40:54.117Z] >>> [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/gestion-gastos-8f1b2:testIamPermissions {"permissions":["firebase.projects.get","firebasehosting.sites.update"]}
+[debug] [2026-08-15T18:40:55.171Z] <<< [apiv2][status] POST https://cloudresourcemanager.googleapis.com/v1/projects/gestion-gastos-8f1b2:testIamPermissions 200
+[debug] [2026-08-15T18:40:55.171Z] <<< [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/gestion-gastos-8f1b2:testIamPermissions {"permissions":["firebase.projects.get","firebasehosting.sites.update"]}
+[debug] [2026-08-15T18:40:55.173Z] Checked if tokens are valid: true, expires at: 1786821488371
+[debug] [2026-08-15T18:40:55.173Z] Checked if tokens are valid: true, expires at: 1786821488371
+[debug] [2026-08-15T18:40:55.174Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects/gestion-gastos-8f1b2 [none]
+[debug] [2026-08-15T18:40:55.703Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects/gestion-gastos-8f1b2 200
+[debug] [2026-08-15T18:40:55.703Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects/gestion-gastos-8f1b2 {"projectId":"gestion-gastos-8f1b2","projectNumber":"988746748496","displayName":"gestion-gastos","name":"projects/gestion-gastos-8f1b2","resources":{"hostingSite":"gestion-gastos-8f1b2"},"state":"ACTIVE","labels":{"firebase":"enabled"},"etag":"1_222a8faf-8015-4942-8d41-e455a2ce93dd"}
+[info] 
+[info] === Deploying to 'gestion-gastos-8f1b2'...
+[info] 
+[info] i  deploying hosting 
+[debug] [2026-08-15T18:40:55.711Z] Checked if tokens are valid: true, expires at: 1786821488371
+[debug] [2026-08-15T18:40:55.711Z] Checked if tokens are valid: true, expires at: 1786821488371
+[debug] [2026-08-15T18:40:55.711Z] >>> [apiv2][query] GET https://firebasehosting.googleapis.com/v1beta1/projects/gestion-gastos-8f1b2/sites/gestion-gastos-8f1b2 [none]
+[debug] [2026-08-15T18:40:57.024Z] <<< [apiv2][status] GET https://firebasehosting.googleapis.com/v1beta1/projects/gestion-gastos-8f1b2/sites/gestion-gastos-8f1b2 200
+[debug] [2026-08-15T18:40:57.024Z] <<< [apiv2][body] GET https://firebasehosting.googleapis.com/v1beta1/projects/gestion-gastos-8f1b2/sites/gestion-gastos-8f1b2 {"name":"projects/gestion-gastos-8f1b2/sites/gestion-gastos-8f1b2","defaultUrl":"https://gestion-gastos-8f1b2.web.app","type":"DEFAULT_SITE"}
+[debug] [2026-08-15T18:40:57.025Z] Checked if tokens are valid: true, expires at: 1786821488371
+[debug] [2026-08-15T18:40:57.026Z] Checked if tokens are valid: true, expires at: 1786821488371
+[debug] [2026-08-15T18:40:57.026Z] >>> [apiv2][query] POST https://firebasehosting.googleapis.com/v1beta1/projects/-/sites/gestion-gastos-8f1b2/versions [none]
+[debug] [2026-08-15T18:40:57.026Z] >>> [apiv2][body] POST https://firebasehosting.googleapis.com/v1beta1/projects/-/sites/gestion-gastos-8f1b2/versions {"status":"CREATED","labels":{"deployment-tool":"cli-firebase"}}
+[debug] [2026-08-15T18:40:58.267Z] <<< [apiv2][status] POST https://firebasehosting.googleapis.com/v1beta1/projects/-/sites/gestion-gastos-8f1b2/versions 200
+[debug] [2026-08-15T18:40:58.267Z] <<< [apiv2][body] POST https://firebasehosting.googleapis.com/v1beta1/projects/-/sites/gestion-gastos-8f1b2/versions {"name":"projects/988746748496/sites/gestion-gastos-8f1b2/versions/b31f6cc6b39608a7","status":"CREATED","config":{},"labels":{"deployment-tool":"cli-firebase"}}
+[info] i  hosting[gestion-gastos-8f1b2]: beginning deploy... 
+[info] i  hosting[gestion-gastos-8f1b2]: found 4 files in dist/web/browser 
+[debug] [2026-08-15T18:40:58.291Z] [hosting] uploading with 200 concurrency
+[debug] [2026-08-15T18:40:58.362Z] Checked if tokens are valid: true, expires at: 1786821488371
+[debug] [2026-08-15T18:40:58.363Z] Checked if tokens are valid: true, expires at: 1786821488371
+[debug] [2026-08-15T18:40:58.364Z] [hosting] hash cache [ZGlzdC93ZWIvYnJvd3Nlcg] stored for 4 files
+[debug] [2026-08-15T18:40:58.364Z] [hosting][hash queue][FINAL] {"max":66,"min":0,"avg":20.75,"active":0,"complete":4,"success":4,"errored":0,"retried":0,"total":4,"elapsed":71}
+[debug] [2026-08-15T18:40:58.364Z] >>> [apiv2][query] POST https://firebasehosting.googleapis.com/v1beta1/projects/988746748496/sites/gestion-gastos-8f1b2/versions/b31f6cc6b39608a7:populateFiles [none]
+[debug] [2026-08-15T18:40:58.365Z] >>> [apiv2][body] POST https://firebasehosting.googleapis.com/v1beta1/projects/988746748496/sites/gestion-gastos-8f1b2/versions/b31f6cc6b39608a7:populateFiles {"files":{"/favicon.ico":"3554b87a6221ace6b3a1d3a782f480d9bbf6b58315586b47818d049b8257038f","/styles-2NT3T6TS.css":"acc2ec93e57c2b676b0af844a7678ec70a4befaeecc0ad44fd6b64cbd68c57e4","/index.html":"a901c7059116628dcbb9f98c25671f501840f0759b49933ad8f473bda6dce92a","/main-3YRAE76J.js":"5d51119514065fbefd91e85196e227760a7e6a1546a9165fab75d28223bf0fc1"}}
+[debug] [2026-08-15T18:40:59.136Z] <<< [apiv2][status] POST https://firebasehosting.googleapis.com/v1beta1/projects/988746748496/sites/gestion-gastos-8f1b2/versions/b31f6cc6b39608a7:populateFiles 200
+[debug] [2026-08-15T18:40:59.136Z] <<< [apiv2][body] POST https://firebasehosting.googleapis.com/v1beta1/projects/988746748496/sites/gestion-gastos-8f1b2/versions/b31f6cc6b39608a7:populateFiles {"uploadRequiredHashes":["a901c7059116628dcbb9f98c25671f501840f0759b49933ad8f473bda6dce92a","5d51119514065fbefd91e85196e227760a7e6a1546a9165fab75d28223bf0fc1"],"uploadUrl":"https://upload-firebasehosting.googleapis.com/upload/sites/gestion-gastos-8f1b2/versions/b31f6cc6b39608a7/files"}
+[debug] [2026-08-15T18:40:59.138Z] Checked if tokens are valid: true, expires at: 1786821488371
+[debug] [2026-08-15T18:40:59.138Z] Checked if tokens are valid: true, expires at: 1786821488371
+[debug] [2026-08-15T18:40:59.138Z] Checked if tokens are valid: true, expires at: 1786821488371
+[debug] [2026-08-15T18:40:59.138Z] Checked if tokens are valid: true, expires at: 1786821488371
+[debug] [2026-08-15T18:40:59.139Z] >>> [apiv2][query] POST https://upload-firebasehosting.googleapis.com/upload/sites/gestion-gastos-8f1b2/versions/b31f6cc6b39608a7/files/a901c7059116628dcbb9f98c25671f501840f0759b49933ad8f473bda6dce92a [none]
+[debug] [2026-08-15T18:40:59.139Z] >>> [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/gestion-gastos-8f1b2/versions/b31f6cc6b39608a7/files/a901c7059116628dcbb9f98c25671f501840f0759b49933ad8f473bda6dce92a [stream]
+[debug] [2026-08-15T18:40:59.142Z] >>> [apiv2][query] POST https://upload-firebasehosting.googleapis.com/upload/sites/gestion-gastos-8f1b2/versions/b31f6cc6b39608a7/files/5d51119514065fbefd91e85196e227760a7e6a1546a9165fab75d28223bf0fc1 [none]
+[debug] [2026-08-15T18:40:59.142Z] >>> [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/gestion-gastos-8f1b2/versions/b31f6cc6b39608a7/files/5d51119514065fbefd91e85196e227760a7e6a1546a9165fab75d28223bf0fc1 [stream]
+[debug] [2026-08-15T18:40:59.146Z] [hosting][populate queue][FINAL] {"max":777,"min":777,"avg":777,"active":0,"complete":1,"success":1,"errored":0,"retried":0,"total":1,"elapsed":784}
+[debug] [2026-08-15T18:40:59.146Z] [hosting] uploads queued: 2
+[info] i  hosting: uploading new files [0/2] (0%) 
