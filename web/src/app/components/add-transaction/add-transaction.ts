@@ -38,6 +38,7 @@ export class AddTransaction implements OnInit {
       if (params['amount']) this.amount = parseFloat(params['amount']);
       if (params['desc']) this.title = params['desc'];
       if (params['type']) this.type = params['type'] as TransactionType;
+      if (params['notes']) this.notes = params['notes'];
     });
 
     if (this.txService.accounts().length > 0) {

@@ -7,6 +7,7 @@ export interface ScannedExpense {
   description: string;
   bank: string;
   date: Date;
+  operationCode?: string;
 }
 
 @Injectable({
@@ -67,14 +68,13 @@ export class GmailService {
     try {
       let bodyData = '';
       
-      // Gmail payload can be multipart or simple
+      // Prefer HTML to ensure we see the full tables
       if (msgData.payload.parts) {
-        // Try to find plain text part or fallback
-        const part = msgData.payload.parts.find((p: any) => p.mimeType === 'text/plain') || msgData.payload.parts[0];
+        const part = msgData.payload.parts.find((p: any) => p.mimeType === 'text/html') || msgData.payload.parts.find((p: any) => p.mimeType === 'text/plain') || msgData.payload.parts[0];
         if (part.body && part.body.data) {
           bodyData = part.body.data;
         } else if (part.parts) {
-          const subpart = part.parts.find((p: any) => p.mimeType === 'text/plain') || part.parts[0];
+          const subpart = part.parts.find((p: any) => p.mimeType === 'text/html') || part.parts.find((p: any) => p.mimeType === 'text/plain') || part.parts[0];
           bodyData = subpart?.body?.data || '';
         }
       } else if (msgData.payload.body && msgData.payload.body.data) {
@@ -94,17 +94,28 @@ export class GmailService {
       const isInterbank = fromHeader.includes('servicioalcliente@netinterbank.com.pe');
       const isBCP = fromHeader.includes('notificaciones@notificacionesbcp.com.pe');
 
+      // 1. Strip all HTML tags
+      // 2. Replace &nbsp; with space
+      // 3. Collapse multiple spaces/newlines into a single space
+      let cleanBody = decodedBody
+        .replace(/<[^>]*>?/gm, ' ')
+        .replace(/&nbsp;/gi, ' ')
+        .replace(/\s+/g, ' ')
+        .trim();
+
       if (isInterbank) {
-        console.log("Interbank Snippet:", snippet);
-        // Strip HTML tags for easier regex matching
-        const cleanBody = decodedBody.replace(/<[^>]*>?/gm, ' ').replace(/\s+/g, ' ');
         console.log("Interbank Clean Body:", cleanBody);
         
-        const amountMatch = cleanBody.match(/Monto y moneda\s*S\/\s*([\d.,]+)/i) || cleanBody.match(/S\/\s*([\d.,]+)/i) || snippet.match(/S\/\s*([\d.,]+)/i);
-        const destMatch = cleanBody.match(/Destinatario\s+([A-Za-z0-9 ñÑáéíóúÁÉÍÓÚ]+)/i);
+        // Find amount: "Monto y moneda S/ 1.00" or just "S/ 1.00"
+        const noSpacesBody = cleanBody.replace(/\s+/g, '');
+        const amountMatch = noSpacesBody.match(/S\/([\d.,]+)/i);
         
-        console.log("Amount Match:", amountMatch);
-        console.log("Dest Match:", destMatch);
+        // Find Destinatario
+        const destMatch = cleanBody.match(/Destinatario\s+(.+?)(?:\s+Destino|\s+Monto|\s+Fecha|$)/i);
+        
+        // Find Código de operación
+        const opCodeMatch = cleanBody.match(/Código de operación\s+(\d+)/i);
+        const operationCode = opCodeMatch ? opCodeMatch[1] : undefined;
 
         if (amountMatch) {
           const amount = parseFloat(amountMatch[1].replace(',', ''));
@@ -114,32 +125,36 @@ export class GmailService {
             amount,
             description: `Interbank: ${description}`,
             bank: 'Interbank',
-            date: new Date(parseInt(msgData.internalDate))
+            date: new Date(parseInt(msgData.internalDate)),
+            operationCode
           };
         }
       } else if (isBCP) {
-        console.log("BCP Snippet:", snippet);
-        // Strip HTML tags for easier regex matching
-        const cleanBody = decodedBody.replace(/<[^>]*>?/gm, ' ').replace(/\s+/g, ' ');
         console.log("BCP Clean Body:", cleanBody);
         
-        const amountMatch = cleanBody.match(/Monto pagado\s*S\/\s*([\d.,]+)/i) || cleanBody.match(/S\/\s*([\d.,]+)/i) || snippet.match(/S\/\s*([\d.,]+)/i);
-        const destMatch = cleanBody.match(/Pagado a\s+([A-Za-z0-9 ñÑáéíóúÁÉÍÓÚ]+)/i) || cleanBody.match(/Operación realizada\s+([A-Za-z0-9 ñÑáéíóúÁÉÍÓÚ]+)/i);
+        // Find amount
+        const noSpacesBody = cleanBody.replace(/\s+/g, '');
+        const amountMatch = noSpacesBody.match(/S\/([\d.,]+)/i);
         
-        console.log("BCP Amount Match:", amountMatch);
-        console.log("BCP Dest Match:", destMatch);
+        // Find Destinatario
+        const destMatch = cleanBody.match(/Pagado a\s+(.+?)(?:\s+Tipo|\s+Desde|\s+Moneda|$)/i) || 
+                          cleanBody.match(/Operación realizada\s+(.+?)(?:\s+Fecha|\s+Pagado|$)/i);
+        
+        // Find Número de operación
+        const opCodeMatch = cleanBody.match(/Número de operación\s+(\d+)/i);
+        const operationCode = opCodeMatch ? opCodeMatch[1] : undefined;
 
         if (amountMatch) {
           const amount = parseFloat(amountMatch[1].replace(',', ''));
           const description = destMatch ? destMatch[1].trim() : 'Pago BCP';
-          // Filter out asterisks or HTML tags
           const cleanDesc = description.replace(/<[^>]*>?/gm, '').replace(/\*/g, '').trim();
           return {
             id: msgData.id,
             amount,
             description: `BCP: ${cleanDesc.substring(0, 30)}`,
             bank: 'BCP',
-            date: new Date(parseInt(msgData.internalDate))
+            date: new Date(parseInt(msgData.internalDate)),
+            operationCode
           };
         }
       }

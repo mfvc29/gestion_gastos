@@ -27,12 +27,20 @@ export class Home {
   async scanEmails() {
     this.isScanning.set(true);
     try {
-      const results = await this.gmail.scanRecentExpenses();
+      let results = await this.gmail.scanRecentExpenses();
+      
+      // Filter out expenses that are already added (by checking notes for operationCode)
+      const existingNotes = this.txService.transactions().map(t => t.notes || '');
+      results = results.filter(res => {
+        if (!res.operationCode) return true; // Can't verify, so show it
+        return !existingNotes.some(note => note.includes(res.operationCode!));
+      });
+
       if (results.length === 0) {
         if (!this.auth.googleAccessToken()) {
           alert('Debes cerrar sesión y volver a iniciarla para autorizar la lectura de correos.');
         } else {
-          alert('No se encontraron gastos nuevos (de BCP o Interbank) en las últimas 24 horas, o el formato cambió.');
+          alert('No se encontraron gastos nuevos (de BCP o Interbank) en las últimas 24 horas, o ya fueron agregados.');
         }
       }
       this.scannedExpenses.set(results);
@@ -47,7 +55,8 @@ export class Home {
       queryParams: { 
         amount: expense.amount, 
         desc: expense.description, 
-        type: TransactionType.expense 
+        type: TransactionType.expense,
+        notes: expense.operationCode ? `Ref: ${expense.operationCode}` : ''
       } 
     });
     // Remove it from the list visually
