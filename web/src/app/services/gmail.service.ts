@@ -100,8 +100,8 @@ export class GmailService {
         const cleanBody = decodedBody.replace(/<[^>]*>?/gm, ' ').replace(/\s+/g, ' ');
         console.log("Interbank Clean Body:", cleanBody);
         
-        const amountMatch = cleanBody.match(/Monto y moneda\s*S\/\s*([\d.,]+)/i) || snippet.match(/S\/\s*([\d.,]+)/i);
-        const destMatch = cleanBody.match(/Destinatario\s+([A-Za-z0-9 ]+)/i);
+        const amountMatch = cleanBody.match(/Monto y moneda\s*S\/\s*([\d.,]+)/i) || cleanBody.match(/S\/\s*([\d.,]+)/i) || snippet.match(/S\/\s*([\d.,]+)/i);
+        const destMatch = cleanBody.match(/Destinatario\s+([A-Za-z0-9 ñÑáéíóúÁÉÍÓÚ]+)/i);
         
         console.log("Amount Match:", amountMatch);
         console.log("Dest Match:", destMatch);
@@ -123,8 +123,8 @@ export class GmailService {
         const cleanBody = decodedBody.replace(/<[^>]*>?/gm, ' ').replace(/\s+/g, ' ');
         console.log("BCP Clean Body:", cleanBody);
         
-        const amountMatch = cleanBody.match(/Monto pagado\s*S\/\s*([\d.,]+)/i) || snippet.match(/S\/\s*([\d.,]+)/i);
-        const destMatch = cleanBody.match(/Pagado a\s+([A-Za-z0-9 ]+)/i) || cleanBody.match(/Operación realizada\s+([A-Za-z0-9 ]+)/i);
+        const amountMatch = cleanBody.match(/Monto pagado\s*S\/\s*([\d.,]+)/i) || cleanBody.match(/S\/\s*([\d.,]+)/i) || snippet.match(/S\/\s*([\d.,]+)/i);
+        const destMatch = cleanBody.match(/Pagado a\s+([A-Za-z0-9 ñÑáéíóúÁÉÍÓÚ]+)/i) || cleanBody.match(/Operación realizada\s+([A-Za-z0-9 ñÑáéíóúÁÉÍÓÚ]+)/i);
         
         console.log("BCP Amount Match:", amountMatch);
         console.log("BCP Dest Match:", destMatch);
