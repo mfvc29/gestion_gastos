@@ -8,8 +8,11 @@ export interface Transaction {
   id: string;
   title: string;
   amount: number;
-  date: string; // ISO String
+  date: Date;
   type: TransactionType;
   isCredit: boolean;
-  category: string;
+  category: string; // e.g., 'Comida', 'Transporte', etc.
+  accountId: string; // The ID of the account this transaction is linked to
+  notes?: string;
+  calendarEventId?: string;
 }

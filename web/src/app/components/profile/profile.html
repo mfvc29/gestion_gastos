@@ -1,1 +1,78 @@
-<p>profile works!</p>
+<div class="container animate-fade-in">
+  <div class="topbar">
+    <a routerLink="/" class="btn btn-icon"><span class="material-symbols-outlined">arrow_back</span></a>
+    <h1 class="topbar-title" style="font-size: 1.5rem;">Cuentas y Perfil</h1>
+    <div style="width: 48px;">
+      <button (click)="logout()" class="btn btn-icon" style="color: var(--danger);"><span class="material-symbols-outlined">logout</span></button>
+    </div>
+  </div>
+
+  <div class="glass-card" style="margin-bottom: 2rem;">
+    <h2 style="font-size: 1.25rem; margin-bottom: 1rem;">Mis Cuentas</h2>
+    
+    <div *ngIf="txService.accounts().length === 0" style="text-align: center; color: var(--text-muted); padding: 1rem 0;">
+      No has creado ninguna cuenta aún.
+    </div>
+
+    <div *ngFor="let acc of txService.accounts()" style="display: flex; justify-content: space-between; align-items: center; padding: 1rem; border-bottom: 1px solid #e2e8f0;">
+      <div>
+        <div style="font-weight: 600;">{{ acc.name }} <span style="font-size: 0.75rem; background: #e2e8f0; padding: 0.1rem 0.4rem; border-radius: 4px; margin-left: 0.5rem;">{{ acc.bank }}</span></div>
+        <div style="font-size: 0.875rem; color: var(--text-muted);">
+          {{ acc.type === AccountType.DEBIT ? 'Débito/Efectivo' : acc.type === AccountType.VAULT ? 'Bóveda/Ahorro' : 'Tarjeta de Crédito' }}
+        </div>
+      </div>
+      <div style="text-align: right; display: flex; align-items: center; gap: 1rem;">
+        <div>
+          <div [style.color]="acc.type === AccountType.CREDIT ? 'var(--danger)' : 'var(--text-main)'" style="font-weight: 700;">
+            S/ {{ acc.balance | number:'1.2-2' }}
+          </div>
+          <div *ngIf="acc.type === AccountType.CREDIT" style="font-size: 0.75rem; color: var(--text-muted);">
+            Límite: S/ {{ acc.creditLimit | number:'1.2-2' }}
+          </div>
+        </div>
+        <button (click)="deleteAccount(acc.id)" class="btn-icon" style="width: 32px; height: 32px; color: var(--danger);"><span class="material-symbols-outlined" style="font-size: 1.2rem;">delete</span></button>
+      </div>
+    </div>
+  </div>
+
+  <form (ngSubmit)="addAccount()" #accountForm="ngForm" class="glass-card">
+    <h2 style="font-size: 1.25rem; margin-bottom: 1rem;">Agregar Cuenta o Bóveda</h2>
+    
+    <div class="form-group">
+      <label class="form-label" for="newName">Nombre (Ej: Yape BCP, Viaje Ahorro)</label>
+      <input type="text" id="newName" name="newName" class="form-control" [(ngModel)]="newName" required>
+    </div>
+
+    <div style="display: flex; gap: 1rem;">
+      <div class="form-group" style="flex: 1;">
+        <label class="form-label" for="newBank">Banco/App</label>
+        <select id="newBank" name="newBank" class="form-control" [(ngModel)]="newBank">
+          <option *ngFor="let bank of banks" [value]="bank">{{ bank }}</option>
+        </select>
+      </div>
+
+      <div class="form-group" style="flex: 1;">
+        <label class="form-label" for="newType">Tipo</label>
+        <select id="newType" name="newType" class="form-control" [(ngModel)]="newType">
+          <option [value]="AccountType.DEBIT">Débito / Cuenta Sueldo</option>
+          <option [value]="AccountType.VAULT">Bóveda / Ahorro</option>
+          <option [value]="AccountType.CREDIT">Tarjeta de Crédito</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label" for="newBalance">Saldo Actual (O Deuda si es Tarjeta de Crédito)</label>
+      <input type="number" id="newBalance" name="newBalance" class="form-control" [(ngModel)]="newBalance" required step="0.01">
+    </div>
+
+    <div class="form-group" *ngIf="newType === AccountType.CREDIT">
+      <label class="form-label" for="newCreditLimit">Límite de Crédito (S/)</label>
+      <input type="number" id="newCreditLimit" name="newCreditLimit" class="form-control" [(ngModel)]="newCreditLimit" required step="0.01">
+    </div>
+
+    <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 1rem;" [disabled]="!accountForm.valid">
+      <span class="material-symbols-outlined">add</span> Guardar Cuenta
+    </button>
+  </form>
+</div>

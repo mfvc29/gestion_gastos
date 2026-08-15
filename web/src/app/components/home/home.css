@@ -1,0 +1,54 @@
+.mb-4 {
+  margin-bottom: 1.5rem;
+}
+
+.alert-box {
+  display: flex;
+  align-items: center;
+  border-left: 4px solid;
+  padding: 1rem;
+}
+
+.tx-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+}
+
+.tx-icon.expense {
+  background: linear-gradient(135deg, var(--danger) 0%, #b91c1c 100%);
+  box-shadow: 0 4px 10px rgba(239, 68, 68, 0.3);
+}
+
+.tx-icon.income {
+  background: linear-gradient(135deg, var(--success) 0%, #047857 100%);
+  box-shadow: 0 4px 10px rgba(16, 185, 129, 0.3);
+}
+
+.tx-icon.payment {
+  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+  box-shadow: 0 4px 10px rgba(79, 70, 229, 0.3);
+}
+
+.text-success { color: var(--success); }
+.text-danger { color: var(--danger); }
+.text-primary { color: var(--primary); }
+
+.btn-delete {
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: var(--transition);
+  margin-top: 0.5rem;
+  padding: 0.25rem;
+}
+
+.btn-delete:hover {
+  color: var(--danger);
+  transform: scale(1.1);
+}

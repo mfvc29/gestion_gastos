@@ -1,1 +1,112 @@
-<p>home works!</p>
+<div class="container animate-fade-in">
+  <div class="topbar">
+    <h1 class="topbar-title">Mis Gastos</h1>
+    <div class="topbar-actions">
+      <a routerLink="/metrics" class="btn btn-icon"><span class="material-symbols-outlined">bar_chart</span></a>
+      <a routerLink="/profile" class="btn btn-icon"><span class="material-symbols-outlined">settings</span></a>
+      <a routerLink="/add" class="btn btn-primary btn-icon"><span class="material-symbols-outlined">add</span></a>
+    </div>
+  </div>
+
+  <!-- Dashboard -->
+  <div class="glass-card mb-4" style="background: linear-gradient(135deg, rgba(238,242,255,0.8) 0%, rgba(224,231,255,0.8) 100%);">
+    <div style="text-align: center;">
+      <p style="color: var(--primary); font-weight: 600; font-size: 0.875rem;">Saldo Proyectado (Real)</p>
+      <h2 style="font-size: 2.5rem; margin: 0.5rem 0;" 
+          [style.color]="txService.projectedBalance() >= 0 ? 'var(--success)' : 'var(--danger)'">
+        S/ {{ txService.projectedBalance() | number:'1.2-2' }}
+      </h2>
+      <p *ngIf="txService.projectedBalance() < 0" style="color: var(--danger); font-size: 0.75rem;">
+        ¡Estás gastando dinero que no tienes!
+      </p>
+    </div>
+    <div>
+      <h1 class="topbar-title">Hola, {{ getFirstName() }} 👋</h1>
+      <p style="color: var(--text-muted); font-size: 0.875rem;">Resumen financiero</p>
+    </div>
+    <div style="display: flex; gap: 0.5rem;">
+      <a routerLink="/profile" class="btn btn-icon"><span class="material-symbols-outlined">account_circle</span></a>
+    </div>
+  </div>
+
+  <div class="glass-card balance-card">
+    <div class="balance-item">
+      <span class="balance-label">Dinero Disponible</span>
+      <h2 class="balance-value" style="color: var(--success);">S/ {{ txService.totalBalance() | number:'1.2-2' }}</h2>
+    </div>
+    <div class="balance-item" style="border-left: 1px solid rgba(0,0,0,0.1); padding-left: 1rem;">
+      <span class="balance-label">Deuda Actual TC</span>
+      <h2 class="balance-value" style="color: var(--danger);">S/ {{ txService.totalDebt() | number:'1.2-2' }}</h2>
+    </div>
+  </div>
+
+  <!-- Account Quick View -->
+  <div style="display: flex; gap: 0.5rem; overflow-x: auto; padding-bottom: 1rem; margin-bottom: 1rem;">
+    <div *ngFor="let acc of txService.accounts()" class="glass-card" style="min-width: 140px; padding: 0.75rem;">
+      <div style="font-size: 0.75rem; color: var(--text-muted); display: flex; justify-content: space-between;">
+        {{ acc.name }}
+        <span class="material-symbols-outlined" style="font-size: 1rem;" [style.color]="acc.type === AccountType.CREDIT ? 'var(--danger)' : 'var(--primary)'">
+          {{ acc.type === AccountType.CREDIT ? 'credit_card' : 'account_balance_wallet' }}
+        </span>
+      </div>
+      <div style="font-weight: bold; font-size: 1.1rem; margin-top: 0.25rem;">S/ {{ acc.balance | number:'1.2-2' }}</div>
+    </div>
+  </div>
+
+  <div class="actions-grid mb-4">
+    <a routerLink="/add" class="action-btn">
+      <div class="action-icon" style="background: rgba(16, 185, 129, 0.1); color: var(--success);">
+        <span class="material-symbols-outlined">add</span>
+      </div>
+      <span>Nuevo Movimiento</span>
+    </a>
+    <a routerLink="/metrics" class="action-btn">
+      <div class="action-icon" style="background: rgba(79, 70, 229, 0.1); color: var(--primary);">
+        <span class="material-symbols-outlined">analytics</span>
+      </div>
+      <span>Análisis Mensual</span>
+    </a>
+  </div>
+
+  <div class="glass-card">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+      <h3 style="font-size: 1.125rem;">Últimos Movimientos</h3>
+    </div>
+
+    <div *ngIf="txService.transactions().length === 0" style="text-align: center; color: var(--text-muted); padding: 2rem 0;">
+      No hay movimientos registrados.
+    </div>
+
+    <div class="tx-list">
+      <div class="tx-item" *ngFor="let tx of txService.transactions()">
+        <div style="display: flex; align-items: center; gap: 1rem;">
+          <div class="tx-icon"
+            [style.background]="tx.type === TransactionType.income ? 'rgba(16, 185, 129, 0.1)' : (tx.type === TransactionType.payment ? 'rgba(79, 70, 229, 0.1)' : 'rgba(239, 68, 68, 0.1)')"
+            [style.color]="tx.type === TransactionType.income ? 'var(--success)' : (tx.type === TransactionType.payment ? 'var(--primary)' : 'var(--danger)')">
+            <span class="material-symbols-outlined">{{ tx.type === TransactionType.income ? 'arrow_downward' : (tx.type === TransactionType.payment ? 'credit_score' : 'arrow_upward') }}</span>
+          </div>
+          <div>
+            <h4 class="tx-title">{{ tx.title }}</h4>
+            <div class="tx-date">
+              {{ tx.date | date:'dd MMM, yyyy' }} • <span style="color: var(--primary);">{{ getAccountName(tx.accountId) }}</span>
+            </div>
+            <div *ngIf="tx.notes" style="font-size: 0.75rem; color: var(--text-muted); margin-top: 0.25rem;">
+              {{ tx.notes }}
+            </div>
+            <div *ngIf="tx.calendarEventId" style="font-size: 0.75rem; color: var(--secondary); display: flex; align-items: center; gap: 2px;">
+              <span class="material-symbols-outlined" style="font-size: 0.8rem;">event</span> En Calendario
+            </div>
+          </div>
+        </div>
+        <div style="display: flex; align-items: center; gap: 1rem;">
+          <span class="tx-amount" [class.negative]="tx.type === TransactionType.expense || tx.type === TransactionType.payment" [class.positive]="tx.type === TransactionType.income">
+            {{ tx.type === TransactionType.income ? '+' : '-' }} S/ {{ tx.amount | number:'1.2-2' }}
+          </span>
+          <button (click)="deleteTx(tx.id)" class="btn-icon" style="color: var(--danger); width: 24px; height: 24px;">
+            <span class="material-symbols-outlined" style="font-size: 1rem;">close</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

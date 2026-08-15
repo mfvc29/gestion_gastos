@@ -1,1 +1,81 @@
-<p>add-transaction works!</p>
+<div class="container animate-fade-in">
+  <div class="topbar">
+    <a routerLink="/" class="btn btn-icon"><span class="material-symbols-outlined">arrow_back</span></a>
+    <h1 class="topbar-title" style="font-size: 1.5rem;">Nuevo Movimiento</h1>
+    <div style="width: 48px;"></div>
+  </div>
+
+  <form (ngSubmit)="onSubmit()" #txForm="ngForm" class="glass-card" style="margin-top: 1rem;">
+    
+    <div class="form-group" style="display: flex; gap: 1rem; background: #f1f5f9; padding: 0.5rem; border-radius: 12px; margin-bottom: 1.5rem;">
+      <button type="button" class="btn" style="flex: 1; border-radius: 8px;"
+        [class.btn-primary]="type === TransactionType.expense"
+        [style.background]="type === TransactionType.expense ? 'var(--danger)' : 'transparent'"
+        [style.color]="type === TransactionType.expense ? 'white' : 'var(--text-main)'"
+        (click)="type = TransactionType.expense">Gasto</button>
+      <button type="button" class="btn" style="flex: 1; border-radius: 8px;"
+        [class.btn-primary]="type === TransactionType.income"
+        [style.background]="type === TransactionType.income ? 'var(--success)' : 'transparent'"
+        [style.color]="type === TransactionType.income ? 'white' : 'var(--text-main)'"
+        (click)="type = TransactionType.income">Ingreso</button>
+      <button type="button" class="btn" style="flex: 1; border-radius: 8px;"
+        [class.btn-primary]="type === TransactionType.payment"
+        [style.background]="type === TransactionType.payment ? 'var(--primary)' : 'transparent'"
+        [style.color]="type === TransactionType.payment ? 'white' : 'var(--text-main)'"
+        (click)="type = TransactionType.payment">Pago TC</button>
+    </div>
+
+    <div class="form-group" *ngIf="txService.accounts().length === 0">
+      <div style="background: #fee2e2; color: #b91c1c; padding: 1rem; border-radius: 8px; text-align: center;">
+        Debes agregar al menos una cuenta en tu Perfil antes de registrar movimientos.
+      </div>
+    </div>
+
+    <ng-container *ngIf="txService.accounts().length > 0">
+      <div class="form-group">
+        <label class="form-label" for="amount">Monto (S/)</label>
+        <input type="number" id="amount" name="amount" class="form-control" style="font-size: 1.5rem; font-weight: bold; text-align: right;" [(ngModel)]="amount" required step="0.01">
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="title">Descripción</label>
+        <input type="text" id="title" name="title" class="form-control" [(ngModel)]="title" required placeholder="Ej: Cena, Sueldo, Taxi">
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="accountId">Cuenta</label>
+        <select id="accountId" name="accountId" class="form-control" [(ngModel)]="accountId" required>
+          <option *ngFor="let acc of availableAccounts" [value]="acc.id">{{ acc.name }} ({{ acc.bank }}) - S/ {{ acc.balance | number:'1.2-2' }}</option>
+        </select>
+      </div>
+
+      <div style="display: flex; gap: 1rem;">
+        <div class="form-group" style="flex: 1;" *ngIf="type === TransactionType.expense">
+          <label class="form-label" for="category">Categoría</label>
+          <select id="category" name="category" class="form-control" [(ngModel)]="category">
+            <option *ngFor="let cat of categories" [value]="cat">{{ cat }}</option>
+          </select>
+        </div>
+
+        <div class="form-group" style="flex: 1;">
+          <label class="form-label" for="date">Fecha</label>
+          <input type="date" id="date" name="date" class="form-control" [(ngModel)]="date" required>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="notes">Notas (Opcional)</label>
+        <textarea id="notes" name="notes" class="form-control" [(ngModel)]="notes" rows="2" placeholder="Detalles extra del movimiento..."></textarea>
+      </div>
+
+      <div class="form-group" style="display: flex; align-items: center; gap: 0.5rem; margin-top: 1rem; margin-bottom: 2rem;">
+        <input type="checkbox" id="addToCalendar" name="addToCalendar" [(ngModel)]="addToCalendar" style="width: 20px; height: 20px;">
+        <label for="addToCalendar" style="margin: 0; font-weight: 500;">Añadir evento a Google Calendar</label>
+      </div>
+
+      <button type="submit" class="btn btn-primary" style="width: 100%; font-size: 1.1rem; padding: 1rem;" [disabled]="!txForm.valid || !accountId">
+        <span class="material-symbols-outlined">check_circle</span> Guardar Movimiento
+      </button>
+    </ng-container>
+  </form>
+</div>
